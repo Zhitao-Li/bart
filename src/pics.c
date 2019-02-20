@@ -79,7 +79,7 @@ static const struct linop_s* sense_nc_init(const long max_dims[DIMS], const long
 		 * sensitivity weighting but before NUFFT).
 		 */
 
-		const struct linop_s* fft_slice = linop_fft_create(DIMS, map_dims, SLICE_FLAG);
+		const struct linop_s* fft_slice = linop_fft_create(DIMS, coilim_dims, SLICE_FLAG);
 
 		fft_op = linop_chain_FF(fft_slice, fft_op);
 	}
@@ -221,11 +221,9 @@ int main_pics(int argc, char* argv[])
 
 	complex float* kspace = load_cfl(argv[1], DIMS, ksp_dims);
 
-        if (sms) {
-
+        if (sms)
                 debug_printf(DP_INFO, "SMS reconstruction: MB = %ld\n", ksp_dims[SLICE_DIM]);
-                nuconf.toeplitz = false; // no longer toeplitz-shaped because of chaining of operators (see later)?!
-        }
+
 
 	complex float* maps = load_cfl(argv[2], DIMS, map_dims);
 
