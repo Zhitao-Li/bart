@@ -205,14 +205,13 @@ tests/test-pics-basis-noncart: traj scale phantom delta fmac ones repmat pics nu
 	set -e; mkdir $(TESTS_TMP) ; cd $(TESTS_TMP)					;\
 	$(TOOLDIR)/traj -r -x256 -D -y31 traj.ra					;\
 	$(TOOLDIR)/scale 0.5 traj.ra traj2.ra						;\
+	$(TOOLDIR)/transpose 2 5 traj2.ra traj3.ra					;\
 	$(TOOLDIR)/phantom -t traj2.ra ksp.ra						;\
-	$(TOOLDIR)/delta 16 36 31 p.ra 							;\
-	$(TOOLDIR)/fmac ksp.ra p.ra pk.ra						;\
-	$(TOOLDIR)/repmat 1 256 p.ra p2.ra						;\
+	$(TOOLDIR)/transpose 2 5 ksp.ra ksp2.ra						;\
 	$(TOOLDIR)/ones 6 1 1 1 1 1 31 o.ra						;\
 	$(TOOLDIR)/repmat 6 2 o.ra o2.ra						;\
 	$(TOOLDIR)/ones 3 128 128 1 coils.ra						;\
-	$(TOOLDIR)/pics -S -r0.001 -t traj2.ra -pp2.ra -Bo2.ra pk.ra coils.ra reco1.ra	;\
+	$(TOOLDIR)/pics -S -r0.001 -t traj3.ra -Bo2.ra ksp2.ra coils.ra reco1.ra	;\
 	$(TOOLDIR)/pics -S -r0.001 -t traj2.ra ksp.ra coils.ra reco.ra			;\
 	$(TOOLDIR)/scale 4. reco1.ra reco2.ra						;\
 	$(TOOLDIR)/slice 6 0 reco2.ra reco20.ra						;\
