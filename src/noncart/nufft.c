@@ -137,62 +137,133 @@ static void compute_kern(unsigned int N, const long krn_dims[N], complex float* 
 	assert(1 == wgh_dims[N - 1]);
 	assert(1 == bas_dims[N - 1]);
 
-	long baT_dims[N];
-	md_copy_dims(N, baT_dims, bas_dims);
-	baT_dims[N - 1] = bas_dims[5];
-	baT_dims[5] = 1;
-
-	long wgT_dims[N];
-	md_copy_dims(N, wgT_dims, wgh_dims);
-	wgT_dims[N - 1] = wgh_dims[5];
-	wgT_dims[5] = 1;
-
-	long max_dims[N];
-	md_max_dims(N, ~0u, max_dims, baT_dims, wgT_dims);
-
-	long max_strs[N];
-	md_calc_strides(N, max_strs, max_dims, CFL_SIZE);
-
 	long bas_strs[N];
 	md_calc_strides(N, bas_strs, bas_dims, CFL_SIZE);
-
-	long baT_strs[N];
-	md_copy_strides(N, baT_strs, bas_strs);
-	baT_strs[N - 1] = bas_strs[5];
-	baT_strs[5] = 0;
 
 	long wgh_strs[N];
 	md_calc_strides(N, wgh_strs, wgh_dims, CFL_SIZE);
 
-	long wgT_strs[N];
-	md_copy_strides(N, wgT_strs, wgh_strs);
-	wgT_strs[N - 1] = wgh_strs[5];
-	wgT_strs[5] = 0;
+	if (wgh_dims[2] == 1) { // We can grid all time-points at once
 
-	complex float* tmp = md_alloc(N, max_dims, CFL_SIZE);
+		// Dot product between basis and weights for single read-out pixel if weights are 'ones' only
+		bool single_RO = false;
+		if (NULL != basis) {
 
-	md_copy2(N, max_dims, max_strs, tmp, baT_strs, basis, CFL_SIZE);
+			long pixels_tot = 1;
+			for (int i = 0; i < N; i++)
+				pixels_tot *= wgh_dims[i];
 
-	md_zmul2(N, max_dims, max_strs, tmp, max_strs, tmp, wgT_strs, weights);
-	md_zmulc2(N, max_dims, max_strs, tmp, max_strs, tmp, wgT_strs, weights);
+			float pixels_sum = md_zasum(N, wgh_dims, weights);
 
-	baT_dims[5] = baT_dims[6];
-	baT_dims[6] = 1;
+			if ((long)pixels_sum == pixels_tot) {
+				single_RO = true;
+				debug_printf(DP_DEBUG1, "Kernel calculation for single Readout pixel\n");
+			}
+		}
 
-	baT_strs[5] = baT_strs[6];
-	baT_strs[6] = 0;
+		long wgh2_dims[N];
+		md_select_dims(N, single_RO ? ~MD_BIT(1) : ~0lu, wgh2_dims, wgh_dims);
 
-	long krn_strs[N];
-	md_calc_strides(N, krn_strs, krn_dims, CFL_SIZE);
+		long weights_basis_dims[N];
+		md_max_dims(N, ~0lu, weights_basis_dims, wgh2_dims, bas_dims);
+		complex float* weights_basis = md_alloc(N, weights_basis_dims, CFL_SIZE);
 
-	long ma2_dims[N];
-	md_tenmul_dims(N, ma2_dims, krn_dims, max_dims, baT_dims);
+		long weights_basis_strs[N];
+		md_calc_strides(N, weights_basis_strs, weights_basis_dims, CFL_SIZE);
 
-	md_ztenmulc2(N, ma2_dims, krn_strs, krn, max_strs, tmp, baT_strs, basis);
+		md_ztenmulc2(N, weights_basis_dims, weights_basis_strs, weights_basis, wgh_strs, weights, bas_strs, basis);
+
+		// Join Spoke and Time dimension
+		long weights_basis2_dims[N];
+		md_copy_dims(N, weights_basis2_dims, weights_basis_dims);
+		weights_basis2_dims[2] = weights_basis_dims[2] * weights_basis_dims[5];
+		weights_basis2_dims[5] = 1;
+		long weights_basis2_strs[N];
+		md_calc_strides(N, weights_basis2_strs, weights_basis2_dims, CFL_SIZE);
+
+		long weights_basis2T_dims[N];
+		md_copy_dims(N, weights_basis2T_dims, weights_basis2_dims);
+		weights_basis2T_dims[5] = weights_basis2_dims[6];
+		weights_basis2T_dims[6] = 1;
+		long weights_basis2T_strs[N];
+		md_calc_strides(N, weights_basis2T_strs, weights_basis2T_dims, CFL_SIZE);
+
+		long krn2_dims[N];
+		md_max_dims(N, ~0lu, krn2_dims, weights_basis2_dims, weights_basis2T_dims);
+
+		long krn2_strs[N];
+		md_calc_strides(N, krn2_strs, krn2_dims, CFL_SIZE);
+
+		complex float* krn2;
+		if (single_RO)
+			krn2 = md_alloc(N, krn2_dims, CFL_SIZE);
+
+		md_ztenmulc2(N, krn2_dims, krn2_strs, single_RO ? krn2 : krn, weights_basis2T_strs, weights_basis, weights_basis2_strs, weights_basis);
+
+		if (single_RO) { // Repeat krn2 for all pixels in Readout-dimension
+			long krn_strs[N];
+			md_calc_strides(N, krn_strs, krn_dims, CFL_SIZE);
+			md_copy2(N, krn_dims, krn_strs, krn, krn2_strs, krn2, CFL_SIZE);
+			md_free(krn2);
+		}
+
+		md_free(weights_basis);
+
+	} else { // Grid time-point by time-point
+
+		long baT_dims[N];
+		md_copy_dims(N, baT_dims, bas_dims);
+		baT_dims[N - 1] = bas_dims[5];
+		baT_dims[5] = 1;
+
+		long wgT_dims[N];
+		md_copy_dims(N, wgT_dims, wgh_dims);
+		wgT_dims[N - 1] = wgh_dims[5];
+		wgT_dims[5] = 1;
+
+		long max_dims[N];
+		md_max_dims(N, ~0u, max_dims, baT_dims, wgT_dims);
+
+		long max_strs[N];
+		md_calc_strides(N, max_strs, max_dims, CFL_SIZE);
+
+		long baT_strs[N];
+		md_copy_strides(N, baT_strs, bas_strs);
+		baT_strs[N - 1] = bas_strs[5];
+		baT_strs[5] = 0;
+
+		long wgT_strs[N];
+		md_copy_strides(N, wgT_strs, wgh_strs);
+		wgT_strs[N - 1] = wgh_strs[5];
+		wgT_strs[5] = 0;
+
+		complex float* tmp = md_alloc(N, max_dims, CFL_SIZE);
+
+		md_copy2(N, max_dims, max_strs, tmp, baT_strs, basis, CFL_SIZE);
+
+		md_zmul2(N, max_dims, max_strs, tmp, max_strs, tmp, wgT_strs, weights);
+		md_zmulc2(N, max_dims, max_strs, tmp, max_strs, tmp, wgT_strs, weights);
+
+		baT_dims[5] = baT_dims[6];
+		baT_dims[6] = 1;
+
+		baT_strs[5] = baT_strs[6];
+		baT_strs[6] = 0;
+
+		long krn_strs[N];
+		md_calc_strides(N, krn_strs, krn_dims, CFL_SIZE);
+
+		long ma2_dims[N];
+		md_tenmul_dims(N, ma2_dims, krn_dims, max_dims, baT_dims);
+
+		md_ztenmulc2(N, ma2_dims, krn_strs, krn, max_strs, tmp, baT_strs, basis);
+
+		md_free(tmp);
+	}
 
 	md_zsmul(N, krn_dims, krn, krn, (double)bas_dims[6]);	// FIXME: Why?
 
-	md_free(tmp);
+
 }
 
 
@@ -205,11 +276,20 @@ complex float* compute_psf(unsigned int N, const long img2_dims[N], const long t
 	md_copy_dims(N, ksp_dims1, img2_dims);
 	md_select_dims(3, ~MD_BIT(0), ksp_dims1, trj_dims);
 
+	long trj2_dims[N];
+	md_copy_dims(N, trj2_dims, trj_dims);
+
+	if (trj_dims[2] == 1) { // Transpose time-points to spoke-dimension
+		trj2_dims[2] = trj2_dims[5];
+		trj2_dims[5] = 1;
+		ksp_dims1[2] = trj2_dims[2];
+	}
+
 	struct nufft_conf_s conf = nufft_conf_defaults;
 	conf.periodic = periodic;
 	conf.toeplitz = false;	// avoid infinite loop
 
-	struct linop_s* op2 = nufft_create(N, ksp_dims1, img2_dims, trj_dims, traj, NULL, conf);
+	struct linop_s* op2 = nufft_create(N, ksp_dims1, img2_dims, trj2_dims, traj, NULL, conf);
 
 	complex float* ones = md_alloc(N, ksp_dims1, CFL_SIZE);
 
@@ -324,8 +404,8 @@ struct linop_s* nufft_create2(unsigned int N,
 
 	// dim 0 must be transformed (we treat this special in the trajectory)
 	assert(MD_IS_SET(data->flags, 0));
-	assert(md_check_bounds(N, ~data->flags, ksp_dims, cim_dims));
-	assert(md_check_bounds(N, ~data->flags, cim_dims, ksp_dims));
+// 	assert(md_check_bounds(N, ~data->flags, ksp_dims, cim_dims));
+// 	assert(md_check_bounds(N, ~data->flags, cim_dims, ksp_dims));
 
 	// extend internal dimensions by one for linear phases
 	unsigned int ND = N + 1;
@@ -372,7 +452,7 @@ struct linop_s* nufft_create2(unsigned int N,
 	long chk_dims[N];
 	md_select_dims(N, ~data->flags, chk_dims, traj_dims);
 	assert(md_check_compat(N, ~0ul, chk_dims, ksp_dims));
-	assert(md_check_bounds(N, ~0ul, chk_dims, ksp_dims));
+// 	assert(md_check_bounds(N, ~0ul, chk_dims, ksp_dims));
 
 
 	md_copy_dims(N, data->trj_dims, traj_dims);
@@ -395,7 +475,6 @@ struct linop_s* nufft_create2(unsigned int N,
 
 		data->out_dims[5] = bas_dims[5];	// TE
 		data->out_dims[6] = 1;			// COEFF
-		assert(1 == data->ksp_dims[5]);
 		assert(data->ksp_dims[6] == bas_dims[6]);
 
 		// recompute
@@ -477,8 +556,6 @@ struct linop_s* nufft_create2(unsigned int N,
 
 		if (NULL != basis) {
 
-			assert(1 == data->psf_dims[5]);
-			assert(1 == data->psf_dims[6]);
 			data->psf_dims[6] = data->bas_dims[6];
 			data->psf_dims[5] = data->bas_dims[6];
 		}
