@@ -40,7 +40,45 @@ if(WERROR)
     add_compile_options(-Werror)
 endif()
 
-# Handle OpenMP
+# Dependency handling
+find_package(FFTW3 REQUIRED)
+find_package(BLAS REQUIRED)
+find_package(LAPACK REQUIRED)
+
+# Configure include directories
+include_directories(
+        src
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/
+        ${FFTW_INCLUDE_DIRS}
+        ${BLAS_INCLUDE_DIRS}
+)
+
+# Library definitions
+set(LIBRARIES
+        ${FFTW_LIBRARIES}
+        ${BLAS_LIBRARIES}
+        ${LAPACK_LIBRARIES}
+        fftw3f
+        m
+)
+
+if(OPENBLAS)
+    add_compile_definitions(USE_OPENBLAS)
+endif()
+
+if(CUDA)
+    enable_language(CUDA)
+    set(CMAKE_CUDA_STANDARD 14)
+    find_package(CUDAToolkit REQUIRED)
+    add_compile_definitions(USE_CUDA)
+
+    list(APPEND LIBRARIES
+            CUDA::cudart
+            CUDA::cufft
+            CUDA::cublas
+    )
+endif()
+
 if(OMP)
     find_package(OpenMP REQUIRED)
     add_compile_options(${OpenMP_C_FLAGS})
@@ -49,97 +87,35 @@ endif()
 
 if (FFTWTHREADS)
     add_compile_definitions(FFTWTHREADS)
-endif()
-
-# Platform detection
-if(APPLE)
-    set(BUILDTYPE "MacOSX")
-elseif(CYGWIN)
-    set(BUILDTYPE "Cygwin")
-elseif(MSYS)
-    set(BUILDTYPE "MSYS")
-else()
-    set(BUILDTYPE "Linux")
-endif()
-
-
-# Dependency handling
-find_package(FFTW3 REQUIRED fftw3f)
-find_package(PNG REQUIRED)
-find_package(BLAS REQUIRED)
-find_package(LAPACK REQUIRED)
-
-# Library definitions
-set(LIBRARIES
-        ${FFTW_LIBRARIES}
-
-        ${BLAS_LIBRARIES}
-        ${LAPACK_LIBRARIES}
-        ${PNG_LIBRARY}
-        OpenMP::OpenMP_C
-        pthread
-        fftw3f
-        fftw3f_threads
-        m
-)
-
-
-
-if(CUDA)
-    # Initialize CUDA before any CUDA-specific operations
-    enable_language(CUDA)
-    set(CMAKE_CUDA_STANDARD 14)
-    find_package(CUDAToolkit REQUIRED)
-    add_compile_definitions(USE_CUDA)
+    list(APPEND LIBRARIES fftw3f_threads)
 endif()
 
 if(ISMRMRD)
     find_package(ISMRMRD REQUIRED)
     include_directories(${ISMRMRD_INCLUDE_DIR})
     link_directories(${ISMRMRD_LIB_DIR})
+    list(APPEND LIBRARIES ${ISMRMRD_LIBRARIES})
 endif()
 
 if (PNG)
     find_package(PNG REQUIRED)
-    list(APPEND LIBRARIES
-            ${PNG_LIBRARIES}
-    )
+    include_directories(${PNG_INCLUDE_DIR})
+    list(APPEND LIBRARIES ${PNG_LIBRARIES})
 endif()
 
 if(TENSORFLOW)
     find_package(TensorFlow REQUIRED)
-    include_directories(${PNG_INCLUDE_DIR})
 endif()
 
-
-# Configure include directories
-include_directories(
-        src
-        ${FFTW_INCLUDE_DIRS}
-        ${PNG_INCLUDE_DIRS}
-        ${BLAS_INCLUDE_DIRS}
-)
-
-if(OPENBLAS)
-    add_compile_definitions(USE_OPENBLAS)
-endif()
-
-
-
-message(STATUS ${LIBRARIES})
-
-if(CUDA)
-    list(APPEND LIBRARIES
-            CUDA::cudart
-            CUDA::cufft
-            CUDA::cublas)
-endif()
-
-if(ISMRMRD)
-    list(APPEND LIBRARIES ${ISMRMRD_LIBRARIES})
-endif()
+# Platform detection
+#if(APPLE)
+#    set(BUILDTYPE "MacOSX")
+#elseif(CYGWIN)
+#    set(BUILDTYPE "Cygwin")
+#elseif(MSYS)
+#    set(BUILDTYPE "MSYS")
+#else()
+#    set(BUILDTYPE "Linux")
+#endif()
 
 add_subdirectory(src)
-
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
