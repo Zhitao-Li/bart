@@ -26,7 +26,7 @@ set(BART_SRC_CALIB
         calib/walsh.c
         calib/walsh.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/calib)
+add_library(calib_lib ${BART_SRC_CALIB})
 
 
 set(BART_SRC_GEOM
@@ -43,7 +43,7 @@ set(BART_SRC_GEOM
         geom/triangle.c
         geom/triangle.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/geom)
+add_library(geom_lib ${BART_SRC_GEOM})
 
 
 set(BART_SRC_GRECON
@@ -58,7 +58,7 @@ set(BART_SRC_GRECON
         grecon/optreg.c
         grecon/optreg.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/grecon)
+add_library(grecon_lib ${BART_SRC_GRECON})
 
 
 set(BART_SRC_ISMRM
@@ -67,7 +67,9 @@ set(BART_SRC_ISMRM
         ismrm/xml_wrapper.cc
         ismrm/xml_wrapper.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/ismrm)
+if (ISMRMRD)
+    add_library(ismrm_lib ${BART_SRC_ISMRM})
+endif()
 
 
 set(BART_SRC_ITER
@@ -122,7 +124,7 @@ set(BART_SRC_ITER
         iter/vec.c
         iter/vec.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/iter)
+add_library(iter_lib ${BART_SRC_ITER})
 
 
 set(BART_SRC_LAPACKE
@@ -171,7 +173,7 @@ set(BART_SRC_LAPACKE
         lapacke/lapacke_ztr_trans.c
         lapacke/lapacke.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lapacke)
+add_library(lapacke_lib ${BART_SRC_LAPACKE})
 
 
 set(BART_SRC_LINOPS
@@ -196,7 +198,7 @@ set(BART_SRC_LINOPS
         linops/waveop.c
         linops/waveop.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/linops)
+add_library(linops_lib ${BART_SRC_LINOPS})
 
 
 set(BART_SRC_LOWRANK
@@ -207,7 +209,7 @@ set(BART_SRC_LOWRANK
         lowrank/svthresh.c
         lowrank/svthresh.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lowrank)
+add_library(lowrank_lib ${BART_SRC_LOWRANK})
 
 
 set(BART_SRC_MISC
@@ -263,7 +265,7 @@ set(BART_SRC_MISC
         misc/ya_getopt.c
         misc/ya_getopt.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/misc)
+add_library(misc_lib ${BART_SRC_MISC})
 
 
 set(BART_SRC_MOBA
@@ -300,7 +302,7 @@ set(BART_SRC_MOBA
         moba/T2fun.c
         moba/T2fun.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/moba)
+add_library(moba_lib ${BART_SRC_MOBA})
 
 
 set(BART_SRC_MOTION
@@ -319,7 +321,7 @@ set(BART_SRC_MOTION
         motion/syn.c
         motion/syn.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/motion)
+add_library(motion_lib ${BART_SRC_MOTION})
 
 
 set(BART_SRC_NETWORKS
@@ -340,7 +342,7 @@ set(BART_SRC_NETWORKS
         networks/unet.c
         networks/unet.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/networks)
+add_library(networks_lib ${BART_SRC_NETWORKS})
 
 
 set(BART_SRC_NLOPS
@@ -377,7 +379,7 @@ set(BART_SRC_NLOPS
         nlops/zhyperbolic.c
         nlops/zhyperbolic.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/nlops)
+add_library(nlops_lib ${BART_SRC_NLOPS})
 
 
 set(BART_SRC_NN
@@ -416,7 +418,7 @@ set(BART_SRC_NN
         nn/weights.c
         nn/weights.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/nn)
+add_library(nn_lib ${BART_SRC_NN})
 
 
 set(BART_SRC_NOIR
@@ -435,7 +437,7 @@ set(BART_SRC_NOIR
         noir/utils.c
         noir/utils.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/noir)
+add_library(noir_lib ${BART_SRC_NOIR})
 
 
 set(BART_SRC_NONCART
@@ -455,7 +457,7 @@ set(BART_SRC_NONCART
         noncart/traj.c
         noncart/traj.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/noncart)
+add_library(noncart_lib ${BART_SRC_NONCART})
 
 
 set(BART_SRC_NUM
@@ -572,21 +574,21 @@ set(BART_SRC_NUM
         num/wavelet.c
         num/wavelet.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/num)
+add_library(num_lib ${BART_SRC_NUM})
 
 
 set(BART_SRC_PYTHON
         python/pyBART_docstrings.c
         python/pyBART_pybind11_patch.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/python)
+add_library(python_lib ${BART_SRC_PYTHON})
 
 
 set(BART_SRC_SAKE
         sake/sake.c
         sake/sake.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/sake)
+add_library(sake_lib ${BART_SRC_SAKE})
 
 
 set(BART_SRC_SENSE
@@ -599,7 +601,7 @@ set(BART_SRC_SENSE
         sense/recon.c
         sense/recon.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/sense)
+add_library(sense_lib ${BART_SRC_SENSE})
 
 
 set(BART_SRC_SIMU
@@ -630,7 +632,7 @@ set(BART_SRC_SIMU
         simu/tsegf.c
         simu/tsegf.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/simu)
+add_library(simu_lib ${BART_SRC_SIMU})
 
 
 set(BART_SRC_WAVELET
@@ -641,7 +643,7 @@ set(BART_SRC_WAVELET
         wavelet/wl3-cuda.cu
         wavelet/wl3-cuda.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/wavelet)
+add_library(wavelet_lib ${BART_SRC_WAVELET})
 
 
 set(BART_SRC_WIN
@@ -654,7 +656,9 @@ set(BART_SRC_WIN
         win/rand_r.h
         win/vdprintf.h
 )
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win)
+if (BUILDTYPE STREQUAL "MSYS" OR BUILDTYPE STREQUAL "Cygwin")
+    add_library(win_lib ${BART_SRC_WIN})
+endif()
 
 
 set(BART_SRC
@@ -797,68 +801,9 @@ set(BART_SRC
 
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-set( All_SRC
-        ${BART_SRC_CALIB}
-        ${BART_SRC_GEOM}
-        ${BART_SRC_GRECON}
-        #        ${BART_SRC_ISMRM}
-        ${BART_SRC_ITER}
-        ${BART_SRC_LAPACKE}
-        ${BART_SRC_LINOPS}
-        ${BART_SRC_LOWRANK}
-        ${BART_SRC_MISC}
-        ${BART_SRC_MOBA}
-        ${BART_SRC_MOTION}
-        ${BART_SRC_NETWORKS}
-        ${BART_SRC_NLOPS}
-        ${BART_SRC_NN}
-        ${BART_SRC_NOIR}
-        ${BART_SRC_NONCART}
-        ${BART_SRC_NUM}
-        ${BART_SRC_PYTHON}
-        ${BART_SRC_SAKE}
-        ${BART_SRC_SENSE}
-        ${BART_SRC_SIMU}
-        ${BART_SRC_WAVELET}
-)
 
 
-## Command targets
-#set(XTARGETS
-#        show slice crop resize join transpose squeeze flatten zeros ones flip circshift
-#        extract repmat bitmask reshape version delta copy casorati vec poly index multicfl
-#        tee trx scale invert conj fmac saxpy sdot spow cpyphs creal carg normalize cdf97
-#        pattern nrmse mip avg cabs zexp calc fft fftmod fftshift noise bench threshold conv
-#        rss filter nlmeans mandelbrot wavelet window var std fftrot roistat pol2mask conway
-#        morphop pics pocsense sqpics itsense nlinv moba nufft nufftbase rof tgv ictv sake
-#        wave lrmatrix estdims estshift estdelay wavepsf wshfl rtnlinv mobafit grog ecalib
-#        ecaltwo caldir walsh cc ccapply rovir calmat svd estvar whiten rmfreq ssa bin psf
-#        ncalib homodyne poisson twixread fakeksp looklocker upat fovshift phantom traj
-#        signal epg sim raga toimg reconet nnet onehotenc measure mnist tensorflow nlinvnet
-#        affinereg interpolate estmotion
-#)
-#
-#foreach(target IN LISTS XTARGETS)
-#    add_executable(${target}
-#            main.c
-#            ${target}.c
-#            ${All_SRC}
-#    )
-#    target_compile_definitions(${target} PRIVATE -Dmain_real=main_${target})
-#    target_link_libraries(${target} PRIVATE ${LIBRARIES})
-#endforeach()
-
-
-
-add_executable(${PROJECT_NAME}
-        ${All_SRC}
-#        ${BART_SRC_WIN}
-        ${BART_SRC}
-        main.c
-        main.h
-        bart.c
-)
-
+# Command targets
 set(XTARGETS
         show slice crop resize join transpose squeeze flatten zeros ones flip circshift
         extract repmat bitmask reshape version delta copy casorati vec poly index multicfl
@@ -873,6 +818,80 @@ set(XTARGETS
         affinereg interpolate estmotion
 )
 
+foreach(target IN LISTS XTARGETS)
+    add_executable(${target}
+            main.c
+            ${target}.c
+    )
+    target_compile_definitions(${target} PRIVATE -Dmain_real=main_${target})
+    target_link_libraries(${target} PRIVATE
+            grecon_lib
+            networks_lib
+            noncart_lib
+            nn_lib
+            nlops_lib
+            linops_lib
+            iter_lib
+            simu_lib
+            geom_lib
+            sense_lib
+            linops_lib
+            sake_lib
+            calib_lib
+            num_lib
+            misc_lib
+            num_lib
+            misc_lib
+            misc_lib
+            calib_lib
+            grecon_lib
+            sense_lib
+            motion_lib
+            iter_lib
+            linops_lib
+            wavelet_lib
+            lowrank_lib
+            noncart_lib
+            nn_lib
+            nlops_lib
+            noir_lib
+            grecon_lib
+            wavelet_lib
+            lowrank_lib
+            nn_lib
+            iter_lib
+            nlops_lib
+            linops_lib
+            noncart_lib
+            moba_lib
+            noir_lib
+            nn_lib
+            nlops_lib
+            linops_lib
+            wavelet_lib
+            noncart_lib
+            simu_lib
+            grecon_lib
+            lowrank_lib
+            linops_lib
+            iter_lib
+            nn_lib
+            num_lib
+            lapacke_lib
+            python_lib
+            ${LIBRARIES}
+    )
+endforeach()
+
+
+
+add_executable(${PROJECT_NAME}
+        ${BART_SRC}
+        main.c
+        main.h
+        bart.c
+)
+
 list(JOIN XTARGETS ", " JOINED_XTARGETS)
 set(MAIN_LIST_VALUE "${JOINED_XTARGETS}, ()")
 
@@ -880,4 +899,27 @@ target_compile_options(${PROJECT_NAME} PRIVATE
         $<$<COMPILE_LANG_AND_ID:C,GNU>:-DMAIN_LIST=${MAIN_LIST_VALUE}>)
 target_compile_options(${PROJECT_NAME} PRIVATE -Dmain_real=main_${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE
+        lowrank_lib
+        noncart_lib
+        networks_lib
+        simu_lib
+        sense_lib
+        num_lib
+        nn_lib
+        calib_lib
+        geom_lib
+        grecon_lib
+        iter_lib
+        lapacke_lib
+        linops_lib
+        misc_lib
+        moba_lib
+        motion_lib
+        nlops_lib
+        noir_lib
+        python_lib
+        sake_lib
+        wavelet_lib
+        ${LIBRARIES}
+)

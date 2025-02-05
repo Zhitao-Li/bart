@@ -71,6 +71,7 @@ if(CUDA)
     set(CMAKE_CUDA_STANDARD 14)
     find_package(CUDAToolkit REQUIRED)
     add_compile_definitions(USE_CUDA)
+    include_directories(${CUDAToolkit_INCLUDE_DIRS})
 
     list(APPEND LIBRARIES
             CUDA::cudart
@@ -108,14 +109,14 @@ if(TENSORFLOW)
 endif()
 
 # Platform detection
-#if(APPLE)
-#    set(BUILDTYPE "MacOSX")
-#elseif(CYGWIN)
-#    set(BUILDTYPE "Cygwin")
-#elseif(MSYS)
-#    set(BUILDTYPE "MSYS")
-#else()
-#    set(BUILDTYPE "Linux")
-#endif()
+if(APPLE)
+    set(BUILDTYPE "MacOSX")
+elseif(CYGWIN)
+    set(BUILDTYPE "Cygwin")
+elseif(MSYS)
+    set(BUILDTYPE "MSYS")
+else()
+    set(BUILDTYPE "Linux")
+endif()
 
 add_subdirectory(src)
