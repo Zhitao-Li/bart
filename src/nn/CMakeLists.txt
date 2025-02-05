@@ -1,0 +1,39 @@
+cmake_minimum_required(VERSION 3.22)
+
+set(BART_SRC_NN
+        activation_nn.c
+        activation_nn.h
+        activation.c
+        activation.h
+        batchnorm.c
+        batchnorm.h
+        chain.c
+        chain.h
+        const.c
+        const.h
+        data_list.c
+        data_list.h
+        init.c
+        init.h
+        layers_nn.c
+        layers_nn.h
+        layers.c
+        layers.h
+        losses_nn.c
+        losses_nn.h
+        losses.c
+        losses.h
+        misc.c
+        misc.h
+        nn_ops.c
+        nn_ops.h
+        nn.c
+        nn.h
+        rbf.c
+        rbf.h
+        tf_wrapper.c
+        tf_wrapper.h
+        weights.c
+        weights.h
+)
+add_library(nn_lib ${BART_SRC_NN})

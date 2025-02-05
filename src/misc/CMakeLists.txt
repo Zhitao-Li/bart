@@ -1,0 +1,56 @@
+cmake_minimum_required(VERSION 3.22)
+
+set(BART_SRC_MISC
+        bench.c
+        bench.h
+        cppmap.h
+        cppwrap.h
+        debug.c
+        debug.h
+        dicom.c
+        dicom.h
+        graph.c
+        graph.h
+        io.c
+        io.h
+        list.c
+        list.h
+        lock.c
+        lock.h
+        memcfl.c
+        memcfl.h
+        misc.c
+        misc.h
+        mmio.c
+        mmio.h
+        mri2.c
+        mri.h
+        nested.h
+        opts.c
+        opts.h
+        #        Orchestra.cc
+        pd.c
+        pd.h
+        png.c
+        png.h
+        resize.c
+        resize.h
+        shrdptr.c
+        shrdptr.h
+        stream_protocol.c
+        stream_protocol.h
+        stream.c
+        stream.h
+        subpixel.c
+        subpixel.h
+        tree.c
+        tree.h
+        types.h
+        utils.c
+        utils.h
+        version.c
+        version.h
+        ya_getopt.c
+        ya_getopt.h
+)
+add_library(misc_lib ${BART_SRC_MISC})
