@@ -308,3 +308,13 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         wavelet_lib
         ${LIBRARIES}
 )
+
+get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+set(RELEASE_BIN_DIR "${PROJECT_SOURCE_DIR}/commands/")
+
+if(NOT isMultiConfig)  # Check if not multi-config
+    # Override output directories if building in Release mode
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(EXECUTABLE_OUTPUT_PATH ${RELEASE_BIN_DIR})
+    endif()
+endif()
