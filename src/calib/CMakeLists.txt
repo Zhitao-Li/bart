@@ -1,12 +1,15 @@
 cmake_minimum_required(VERSION 3.22)
 
+set(BART_SRC_CALIB_CUDA
+        calibcu.cu
+        calibcu.h
+)
+
 set(BART_SRC_CALIB
         bin.c
         bin.h
         calib.c
         calib.h
-        calibcu.cu
-        calibcu.h
         calmat.c
         calmat.h
         cc.c
@@ -26,4 +29,8 @@ set(BART_SRC_CALIB
         walsh.c
         walsh.h
 )
-add_library(calib_lib ${BART_SRC_CALIB})
+if(CUDA)
+    add_library(calib_lib ${BART_SRC_CALIB} ${BART_SRC_CALIB_CUDA})
+else()
+    add_library(calib_lib ${BART_SRC_CALIB})
+endif()

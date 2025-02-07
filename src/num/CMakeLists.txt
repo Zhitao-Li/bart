@@ -1,36 +1,10 @@
 cmake_minimum_required(VERSION 3.22)
 
-set(BART_SRC_NUM
-        blas_md_wrapper.c
-        blas_md_wrapper.h
-        blas.c
-        blas.h
-        blockproc.c
-        blockproc.h
-        casorati.c
-        casorati.h
-        chebfun.c
-        chebfun.h
-        conv.c
-        conv.h
-        convcorr.c
-        convcorr.h
-        convoaa.c
-        convoaa.h
+set(BART_SRC_NUM_CUDA
         cudnn_wrapper.c
         cudnn_wrapper.h
         fft-cuda.c
         fft-cuda.h
-        fft.c
-        fft.h
-        filter.c
-        filter.h
-        flpmath.c
-        flpmath.h
-        fltools.c
-        fltools.h
-        gaussians.c
-        gaussians.h
         gpu_conv.cu
         gpu_conv.h
         gpu_reduce.cu
@@ -49,6 +23,35 @@ set(BART_SRC_NUM
         gpuops.h
         gpurand.cu
         gpurand.h
+)
+
+set(BART_SRC_NUM
+        blas_md_wrapper.c
+        blas_md_wrapper.h
+        blas.c
+        blas.h
+        blockproc.c
+        blockproc.h
+        casorati.c
+        casorati.h
+        chebfun.c
+        chebfun.h
+        conv.c
+        conv.h
+        convcorr.c
+        convcorr.h
+        convoaa.c
+        convoaa.h
+        fft.c
+        fft.h
+        filter.c
+        filter.h
+        flpmath.c
+        flpmath.h
+        fltools.c
+        fltools.h
+        gaussians.c
+        gaussians.h
         init.c
         init.h
         iovec.c
@@ -114,4 +117,8 @@ set(BART_SRC_NUM
         wavelet.c
         wavelet.h
 )
-add_library(num_lib ${BART_SRC_NUM})
+if(CUDA)
+    add_library(num_lib ${BART_SRC_NUM} ${BART_SRC_NUM_CUDA})
+else()
+    add_library(num_lib ${BART_SRC_NUM})
+endif()
