@@ -262,7 +262,7 @@ foreach(target IN LISTS XTARGETS)
             iter_lib
             nn_lib
             num_lib
-            lapacke_lib
+#            lapacke_lib
             python_lib
             ${LIBRARIES}
     )
@@ -296,7 +296,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         geom_lib
         grecon_lib
         iter_lib
-        lapacke_lib
+#        lapacke_lib
         linops_lib
         misc_lib
         moba_lib

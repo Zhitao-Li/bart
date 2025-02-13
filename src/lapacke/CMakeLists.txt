@@ -46,4 +46,6 @@ set(BART_SRC_LAPACKE
         lapacke_ztr_trans.c
         lapacke.h
 )
-add_library(lapacke_lib ${BART_SRC_LAPACKE})
+if(NOLAPACKE)
+    add_library(lapacke_lib ${BART_SRC_LAPACKE})
+endif()

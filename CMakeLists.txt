@@ -12,6 +12,7 @@ option(FFTWTHREADS "Use threaded FFTW" ON)
 option(ISMRMRD "Enable ISMRMRD support" OFF)
 option(PNG "Enable PNG support" ON)
 option(TENSORFLOW "Enable TensorFlow support" OFF)
+option(NOLAPACKE "Disable system LAPACKE" OFF)
 
 
 # Configure compiler flags
@@ -41,7 +42,8 @@ if(WERROR)
 endif()
 
 # Dependency handling
-find_package(FFTW3 REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_search_module(FFTW REQUIRED fftw3 IMPORTED_TARGET)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
@@ -49,18 +51,22 @@ find_package(LAPACK REQUIRED)
 include_directories(
         src
         ${CMAKE_CURRENT_SOURCE_DIR}/src/
-        ${FFTW_INCLUDE_DIRS}
+        PkgConfig::FFTW
         ${BLAS_INCLUDE_DIRS}
 )
 
 # Library definitions
 set(LIBRARIES
-        ${FFTW_LIBRARIES}
+        PkgConfig::FFTW
         ${BLAS_LIBRARIES}
         ${LAPACK_LIBRARIES}
         fftw3f
         m
 )
+
+if(NOT NOLAPACKE)
+    list(APPEND LIBRARIES lapacke)
+endif()
 
 if(OPENBLAS)
     add_compile_definitions(USE_OPENBLAS)
