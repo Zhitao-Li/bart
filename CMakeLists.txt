@@ -45,7 +45,7 @@ add_link_options(-Wl,-z,noexecstack)
 
 # Dependency handling
 find_package(PkgConfig REQUIRED)
-pkg_search_module(FFTW REQUIRED fftw3 IMPORTED_TARGET)
+pkg_check_modules(FFTW3 IMPORTED_TARGET REQUIRED fftw3)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
@@ -53,13 +53,13 @@ find_package(LAPACK REQUIRED)
 include_directories(
         src
         ${CMAKE_CURRENT_SOURCE_DIR}/src/
-        PkgConfig::FFTW
+        PkgConfig::FFTW3
         ${BLAS_INCLUDE_DIRS}
 )
 
 # Library definitions
 set(LIBRARIES
-        PkgConfig::FFTW
+        PkgConfig::FFTW3
         ${BLAS_LIBRARIES}
         ${LAPACK_LIBRARIES}
         fftw3f
