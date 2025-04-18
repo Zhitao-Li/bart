@@ -41,6 +41,8 @@ if(WERROR)
     add_compile_options(-Werror)
 endif()
 
+add_link_options(-Wl,-z,noexecstack)
+
 # Dependency handling
 find_package(PkgConfig REQUIRED)
 pkg_search_module(FFTW REQUIRED fftw3 IMPORTED_TARGET)
