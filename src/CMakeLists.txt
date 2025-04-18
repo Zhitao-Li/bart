@@ -203,6 +203,406 @@ set(XTARGETS
         affinereg interpolate estmotion
 )
 
+set(MODULES_pics
+        grecon_lib
+        sense_lib
+        motion_lib
+        iter_lib
+        linops_lib
+        wavelet_lib
+        lowrank_lib
+        noncart_lib
+        nn_lib
+        nlops_lib
+)
+
+set(MODULES_sqpics
+        sense_lib
+        iter_lib
+        linops_lib
+        wavelet_lib
+        lowrank_lib
+        noncart_lib
+        linops_lib
+)
+
+set(MODULES_pocsense
+        sense_lib
+        iter_lib
+        linops_lib
+        wavelet_lib
+)
+
+set(MODULES_nlinv
+        noir_lib
+        grecon_lib
+        wavelet_lib
+        lowrank_lib
+        nn_lib
+        iter_lib
+        nlops_lib
+        linops_lib
+        noncart_lib
+)
+
+set(MODULES_ncalib
+        noir_lib
+        grecon_lib
+        wavelet_lib
+        lowrank_lib
+        nn_lib
+        iter_lib
+        nlops_lib
+        linops_lib
+        noncart_lib
+)
+
+set(MODULES_rtnlinv
+        noir_lib
+        iter_lib
+        nlops_lib
+        linops_lib
+        noncart_lib
+)
+
+set(MODULES_moba
+        moba_lib
+        noir_lib
+        nn_lib
+        nlops_lib
+        linops_lib
+        wavelet_lib
+        noncart_lib
+        simu_lib
+        grecon_lib
+        lowrank_lib
+        linops_lib
+        iter_lib
+        nn_lib
+)
+
+set(MODULES_mobafit
+        moba_lib
+        nlops_lib
+        linops_lib
+        simu_lib
+        iter_lib
+        noir_lib
+)
+
+set(MODULES_bpsense
+        sense_lib
+        noncart_lib
+        iter_lib
+        linops_lib
+        wavelet_lib
+)
+
+set(MODULES_itsense
+        iter_lib
+        linops_lib
+)
+
+set(MODULES_ecalib
+        calib_lib
+        linops_lib
+)
+
+set(MODULES_ecaltwo
+        calib_lib
+        linops_lib
+)
+
+set(MODULES_estdelay
+        calib_lib
+)
+
+set(MODULES_caldir
+        calib_lib
+)
+
+set(MODULES_walsh
+        calib_lib
+)
+
+set(MODULES_calmat
+        calib_lib
+)
+
+set(MODULES_cc
+        calib_lib
+        linops_lib
+)
+
+set(MODULES_ccapply
+        calib_lib
+        linops_lib
+)
+
+set(MODULES_estvar
+        calib_lib
+)
+
+set(MODULES_nufft
+        noncart_lib
+        iter_lib
+        linops_lib
+)
+
+set(MODULES_rof
+        iter_lib
+        linops_lib
+)
+
+set(MODULES_tgv
+        iter_lib
+        linops_lib
+)
+
+set(MODULES_ictv
+        iter_lib
+        linops_lib
+)
+
+set(MODULES_denoise
+        grecon_lib
+        iter_lib
+        linops_lib
+        wavelet_lib
+        lowrank_lib
+        noncart_lib
+        nn_lib
+        nlops_lib
+)
+
+set(MODULES_bench
+        wavelet_lib
+        linops_lib
+)
+
+set(MODULES_phantom
+        simu_lib
+        geom_lib
+)
+
+set(MODULES_bart
+        box_lib
+        grecon_lib
+        sense_lib
+        noir_lib
+        iter_lib
+        linops_lib
+        wavelet_lib
+        lowrank_lib
+        noncart_lib
+        calib_lib
+        simu_lib
+        sake_lib
+        nlops_lib
+        networks_lib
+        noir_lib
+        nn_lib
+        iter_lib
+        moba_lib
+        geom_lib
+        nn_lib
+        motion_lib
+        nlops_lib
+)
+
+set(MODULES_sake
+        sake_lib
+)
+
+set(MODULES_traj
+        noncart_lib
+)
+
+set(MODULES_raga
+        noncart_lib
+)
+
+set(MODULES_wave
+        iter_lib
+        wavelet_lib
+        linops_lib
+        lowrank_lib
+)
+
+set(MODULES_threshold
+        lowrank_lib
+        iter_lib
+        linops_lib
+        wavelet_lib
+)
+
+set(MODULES_fakeksp
+        sense_lib
+        linops_lib
+)
+
+set(MODULES_lrmatrix
+        lowrank_lib
+        iter_lib
+        linops_lib
+        nlops_lib
+)
+
+set(MODULES_estdims
+)
+
+set(MODULES_ismrmrd
+        ismrm_lib
+)
+
+set(MODULES_wavelet
+        linops_lib
+        wavelet_lib
+)
+
+set(MODULES_wshfl
+        grecon_lib
+        sense_lib
+        iter_lib
+        linops_lib
+        wavelet_lib
+        lowrank_lib
+        noncart_lib
+        nlops_lib
+        nn_lib
+        nlops_lib
+)
+
+set(MODULES_ssa
+        calib_lib
+)
+
+set(MODULES_bin
+        calib_lib
+)
+
+set(MODULES_signal
+        simu_lib
+)
+
+set(MODULES_pol2mask
+        geom_lib
+)
+
+set(MODULES_epg
+        simu_lib
+)
+
+set(MODULES_reconet
+        grecon_lib
+        networks_lib
+        noncart_lib
+        nn_lib
+        nlops_lib
+        linops_lib
+        iter_lib
+)
+
+set(MODULES_mnist
+        networks_lib
+        nn_lib
+        nlops_lib
+        linops_lib
+        iter_lib
+)
+
+set(MODULES_nnet
+        grecon_lib
+        networks_lib
+        noncart_lib
+        nn_lib
+        nlops_lib
+        linops_lib
+        iter_lib
+)
+
+set(MODULES_tensorflow
+        nn_lib
+        nlops_lib
+        linops_lib
+        iter_lib
+)
+
+set(MODULES_measure
+        grecon_lib
+        networks_lib
+        noncart_lib
+        nn_lib
+        nlops_lib
+        linops_lib
+        iter_lib
+)
+
+set(MODULES_onehotenc
+        nn_lib
+)
+
+set(MODULES_sim
+        simu_lib
+)
+
+set(MODULES_morphop
+        nlops_lib
+        linops_lib
+        geom_lib
+)
+
+set(MODULES_psf
+        noncart_lib
+        linops_lib
+)
+
+set(MODULES_nlinvnet
+        networks_lib
+        noir_lib
+        iter_lib
+        nn_lib
+        nlops_lib
+        linops_lib
+        noncart_lib
+        grecon_lib
+        networks_lib
+        sense_lib
+        iter_lib
+        linops_lib
+        wavelet_lib
+        lowrank_lib
+        noncart_lib
+        nlops_lib
+        nn_lib
+)
+
+set(MODULES_grog
+        calib_lib
+)
+
+set(MODULES_affinereg
+        motion_lib
+        iter_lib
+        nlops_lib
+        linops_lib
+)
+
+set(MODULES_estmotion
+        motion_lib
+        nn_lib
+        iter_lib
+        nlops_lib
+        linops_lib
+)
+
+set(MODULES_interpolate
+        motion_lib
+        iter_lib
+        nlops_lib
+        linops_lib
+)
+
 foreach(target IN LISTS XTARGETS)
     add_executable(${target}
             main.c
@@ -210,60 +610,11 @@ foreach(target IN LISTS XTARGETS)
     )
     target_compile_definitions(${target} PRIVATE -Dmain_real=main_${target})
     target_link_libraries(${target} PRIVATE
-            grecon_lib
-            networks_lib
-            noncart_lib
-            nn_lib
-            nlops_lib
-            linops_lib
-            iter_lib
-            simu_lib
-            geom_lib
-            sense_lib
-            linops_lib
-            sake_lib
-            calib_lib
+            ${MODULES_${target}}
             num_lib
             misc_lib
             num_lib
             misc_lib
-            misc_lib
-            calib_lib
-            grecon_lib
-            sense_lib
-            motion_lib
-            iter_lib
-            linops_lib
-            wavelet_lib
-            lowrank_lib
-            noncart_lib
-            nn_lib
-            nlops_lib
-            noir_lib
-            grecon_lib
-            wavelet_lib
-            lowrank_lib
-            nn_lib
-            iter_lib
-            nlops_lib
-            linops_lib
-            noncart_lib
-            moba_lib
-            noir_lib
-            nn_lib
-            nlops_lib
-            linops_lib
-            wavelet_lib
-            noncart_lib
-            simu_lib
-            grecon_lib
-            lowrank_lib
-            linops_lib
-            iter_lib
-            nn_lib
-            num_lib
-#            lapacke_lib
-            python_lib
             ${LIBRARIES}
     )
 endforeach()
